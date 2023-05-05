@@ -1,0 +1,23 @@
+Package: StockDistFit
+Title: A Package for Fitting Stock Price Distributions
+Version: 0.0.0.9000
+Authors@R: 
+    person("Brian", "Njuguna", , "briannjuguna133@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0002-2119-904X"))
+Description: The StockDistFit package provides functions for fitting probability distributions to stock price data. The package uses maximum likelihood estimation to find the best-fitting distribution for a given stock. It also offers a function to fit several distributions to one or more assests and compare the distribution with the Akaike Information Creterion and then pick the best distribution.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+  dplyr,
+  fGarch,
+  fBasics,
+  fitdistrplus,
+  xts,
+  stats,
+  magrittr,
+  zoo,
+  quantmod,
+  utils,
+  ghyp
