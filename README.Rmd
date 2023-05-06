@@ -35,7 +35,7 @@ devtools::install_github("njuguna-brian/StockDistFit")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+An example is the following 
 
 ```{r example}
 library(StockDistFit)
