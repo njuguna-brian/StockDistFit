@@ -40,7 +40,7 @@ The function can also fit one distribution to one asset.
 }
 \examples{
 \dontrun{
-data = asset_loader("path/to/data", c("asset1", "asset2"), "Close")
+data = asset_loader("path/to/data/folder", c("asset1", "asset2"), "Close")
 fit_multiple_dist(c("norm_fit", "cauchy_fit"), data)
 }
 

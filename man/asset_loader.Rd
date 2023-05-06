@@ -21,6 +21,9 @@ This function reads in asset data stored in .csv format and returns a
 time-series object of the asset data.
 }
 \note{
+The \code{Date} column in the files should be of the format "\%m/\%d/\%y", that is 01/14/13 with
+01 implying the month, 14 the date and 13 the year
+
 The data to be loaded must be in .csv type and also must have the Date, Open,
 Low, High and Close Prices of the assest or assests to be loaded.
 }

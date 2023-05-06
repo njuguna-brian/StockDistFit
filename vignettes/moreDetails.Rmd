@@ -1,0 +1,823 @@
+---
+title: "moreDetails"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{moreDetails}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(StockDistFit)
+```
+
+# Introduction
+
+The **StockDistFit** package provides a set of functions for fitting and comparing probability distributions to stock return data. The package can be used to perform statistical analyses on stock market data, and comparing different distributions and estimating the parameters of the chosen distribution.
+
+The package contains functions for loading stock data, fitting distributions, comparing distributions, and generating summary statistics. The main function, `fit_multiple_dist`, takes as input a vector or a data frame of stock return data and one or a vector of distribution names, and returns the best fitting distribution based on the Akaike Information Criterion (AIC).
+
+This vignette provides an overview of the package and demonstrates how to use its main functions. We will use publicly available stock data, AMZN, GOOG, TSLA and AAPL from Yahoo finance to illustrate how to load stock data, fit distributions, and visualize the results.
+
+## 1. assest_loader() Function
+
+The `asset_loader()` function loads asset data stored in CSV format and returns a time-series object of the asset data. This function takes in three arguments; data_path, assets, and price_col.
+
+data_path is the path to the directory containing the CSV files.
+assets is a vector of asset names to be loaded.
+price_col is the name of the price column to be selected (e.g., Open, Close, Low, High).
+The function reads in the CSV files, selects the specified price column, and merges the data frames for all the assets. The resulting data frame is then converted to an xts object with the dates as row names.
+
+### Usage
+The asset_loader function can be called as follows:
+
+```{r}
+asset_data <- asset_loader("path/to/data/folder", c("AAPL", "MSFT"), "Close")
+
+```
+
+### Details
+
+The data to be loaded must be in CSV format and must contain the Date, Open, Low, High, and Close prices of the assets to be loaded.  The `Date` column in the files should be of the format "%m/%d/%y", that is 01/14/13 with 01 implying the month, 14 the date and 13 the year
+
+The function makes use of the following packages: dplyr, xts, utils, magrittr, zoo, and stats.
+
+### Example
+
+Assume we have CSV files for the Apple (AAPL), Microsoft (MSFT), and Amazon (AMZN) stock prices saved in the directory "path/to/data/folder". To load the Close prices of these assets, we can use the asset_loader function as follows:
+
+```{r}
+asset_data <- asset_loader("path/to/data/folder", c("AAPL", "MSFT", "AMZN"), "Close")
+
+```
+
+
+## weekly_return() Function
+
+This function takes a numeric vector of asset returns and computes weekly returns. The input data must be an xts object with dates as rownames. The function returns a numeric vector of weekly returns.
+
+```{r}
+# Compute weekly returns of an asset vector
+asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
+                         order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
+                                             "2023-05-04", "2023-05-05", "2023-05-06",
+                                             "2023-05-07")))
+weekly_return(asset_returns_xts)
+```
+
+## monthly_return() Function
+
+This function takes a numeric vector of asset returns and computes monthly returns. The input data must be an xts object with dates as rownames. The function returns a numeric vector of monthly returns.
+
+```{r}
+# Compute monthly returns of an asset vector
+asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
+                         order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
+                                             "2023-05-04", "2023-05-05", "2023-05-06",
+                                             "2023-05-07")))
+monthly_return(asset_returns_xts)
+```
+
+
+## annual_return() Function
+
+This function takes a numeric vector of asset returns and computes annual returns. The input data must be an xts object with dates as rownames. The function returns a numeric vector of annual returns.
+
+```{r}
+# Compute annual returns of an asset vector
+asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
+                         order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
+                                             "2023-05-04", "2023-05-05", "2023-05-06",
+                                             "2023-05-07")))
+annual_return(asset_returns_xts)
+```
+
+## cumulative_return() Function
+
+**Compute Cumulative Returns of a Vector**.
+This function takes a vector of asset returns and computes the cumulative wealth generated over time, assuming that the initial wealth was initial_eq.
+
+### Usage
+
+```{r}
+data.cumret(df_ret, initial_eq)
+
+```
+
+### Arguments
+
+df_ret: an xts object of asset returns, with dates as rownames.
+initial_eq: a numeric value representing the initial wealth.
+Value
+An xts object of wealth generated over time.
+
+### Examples
+
+```{r}
+# Compute cumulative returns of an asset vector
+library(quantmod)
+asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
+                         order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
+                                               "2023-05-04", "2023-05-05", "2023-05-06",
+                                               "2023-05-07")))
+data.cumret(asset_returns_xts, initial_eq = 100)
+
+```
+
+## norm_fit() Function
+
+### Description
+norm_fit is a function that fits a normal distribution to a given numeric vector of stock returns or stock prices using the fitdist function from the fitdistrplus package. The function returns a list with the estimated mean and standard deviation parameters of the fitted normal distribution, as well as the AIC and BIC values of the fitted distribution.
+
+### Usage
+
+```{r}
+norm_fit(vec)
+```
+
+### Arguments
+vec: A numeric vector to be fitted with a normal distribution.
+
+### Value
+
+A list with the following components:
+
+par: A numeric vector with the estimated mean and standard deviation parameters of the fitted normal distribution.
+
+aic: A numeric value representing the Akaike information criterion (AIC) of the fitted distribution.
+
+bic: A numeric value representing the Bayesian information criterion (BIC) of the fitted distribution.
+
+### Examples
+
+```{R}
+# Fit a normal distribution to a vector of returns
+df <- asset_loader("path/to/data/folder",  ("AAPL"), "Close")
+returns <- weekly_return(df$AAPL)
+norm_fit(returns)
+
+```
+
+## t_fit() Function
+
+### Description
+
+t_fit is a function that fits the Student's t distribution to a given data vector of stock returns or stock prices using the fit.tuv function from the ghyp package. The function returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+t_fit(vec)
+```
+
+### Arguments
+vec: A numeric vector containing the data to be fitted.
+
+### Return Value
+
+A list containing the following elements:
+
+par: A numeric vector of length 5 containing the estimated values for the parameters of the fitted distribution: lambda (location), alpha (scale), mu (degrees of freedom), sigma (standard deviation), and gamma (skewness).
+
+aic: The Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: The Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+# Fit a Student's t distribution to a vector of returns
+df <- asset_loader("path/to/data/folder",  ("AAPL"), "Close")
+returns <- weekly_return(df$AAPL)
+t_fit(returns)
+```
+
+
+## cauchy_fit() Function
+
+### Description
+
+cauchy_fit is a function that fits the Cauchy distribution to a given data vector of stock returns or stock prices using the fitdist function from the fitdistrplus package. The function returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+cauchy_fit(vec)
+```
+
+
+### Arguments
+
+vec: A numeric vector containing the data to be fitted.
+
+### Return Value
+
+A list containing the following elements:
+
+par: A numeric vector of length 2 containing the estimated values for the parameters of the fitted distribution: lambda (location) and alpha (scale).
+
+aic: The Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: The Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+# Fit a  Cauchy distribution to a vector of returns
+df <- asset_loader("path/to/data/folder",  ("AAPL"), "Close")
+returns <- weekly_return(df$AAPL)
+cauchy_fit(returns)
+```
+
+## ghd_fit() Function
+
+### Description
+
+The ghd_fit function fits the Generalized Hyperbolic (GH) distribution to a given data vector using the fit.ghypuv function from the ghyp package. This function returns the estimated parameters along with the Akaike information criterion (AIC) and Bayesian information criterion (BIC) values for the fitted distribution.
+
+### Usage
+
+```{r}
+ghd_fit(vec)
+```
+
+### Arguments
+
+vec: a numeric vector containing the data to be fitted.
+
+### Details
+
+To use the ghd_fit function, simply pass a numeric vector containing the data to be fitted to the function as an argument. For example, if you have a vector of stock prices, you can use the diff function to compute the vector of returns and then pass it to the ghd_fit function.
+
+### Return Value
+
+The output of the function is a list containing three elements:
+
+par: a numeric vector of length 5 containing the estimated values for the parameters of the fitted distribution: lambda (location), alpha (scale), mu (degrees of freedom), sigma (standard deviation), and gamma (skewness).
+
+aic: the AIC value for the fitted distribution.
+
+bic: the BIC value for the fitted distribution.
+
+You can also use the help function or the ? operator to get more information about the function, including its arguments and examples.
+
+### Example
+
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+ghd_fit(returns)
+
+```
+
+## hd_fit() Function
+
+### Description
+
+The hd_fit function fits the Hyperbolic distribution to a given data vector using the fit.hypuv function from the ghyp package. This function returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+hd_fit(vec)
+```
+
+### Details
+
+To use the hd_fit function, simply pass a numeric vector containing the data to be fitted to the function as an argument. For example, if you have a vector of stock prices, you can use the diff function to compute the vector of returns and then pass it to the hd_fit function:
+
+### Return Value
+
+The output of the function is a list containing three elements:
+
+par: a numeric vector of length 4 containing the estimated values for the parameters of the fitted distribution: alpha (scale), mu (location), sigma (standard deviation), and gamma (skewness).
+
+aic: the AIC value for the fitted distribution.
+
+bic: the BIC value for the fitted distribution.
+
+You can also use the help function or the ? operator to get more information about the function, including its arguments and examples.
+
+### Examples
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+hd_fit(returns)
+
+```
+
+## sym.ghd_fit() Function
+
+### Description
+
+This function fits the Symmetric Generalized Hyperbolic (sGH) distribution to a given data vector using the fit.ghypuv function from the ghyp package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+sym.ghd_fit(vec)
+
+```
+
+### Arguments
+
+vec: a numeric vector containing the data to be fitted.
+
+### Details
+
+The function fits the sGH distribution to the input data using the maximum likelihood method, with the fit.ghypuv function from the ghyp package. The resulting estimated parameters include lambda (location), alpha (scale), mu (degrees of freedom), sigma (standard deviation), and gamma (skewness). The function also returns the Akaike information criterion (AIC) and Bayesian information criterion (BIC) values for the fitted distribution.
+
+### Return Value
+
+A list containing the following elements:
+
+par: a numeric vector of length 5 containing the estimated values for the parameters of the fitted distribution.
+
+aic: the Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: the Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+sym.ghd_fit(returns)
+
+```
+
+## sym.hd_fit()
+
+### Description
+
+This function fits a Symmetric Hyperbolic distribution to a data vector using the fit.hypuv function from the ghyp package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+sym.hd_fit(vec)
+
+```
+
+### Arguments
+vec: a numeric vector containing the symmetric data to be fitted.
+
+### Details
+
+The function fits the Symmetric Hyperbolic distribution to the input data using the maximum likelihood method, with the fit.hypuv function from the ghyp package. The resulting estimated parameters include alpha (scale), mu (degrees of freedom), sigma (standard deviation), and gamma (skewness). The function also returns the Akaike information criterion (AIC) and Bayesian information criterion (BIC) values for the fitted distribution.
+
+### Return Value
+
+A list containing the following elements:
+
+par: a numeric vector of length 4 containing the estimated values for the parameters of the fitted distribution.
+
+aic: the Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: the Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+sym.hd_fit(returns)
+
+```
+
+## vg_fit() Function
+
+### Description
+
+The vg_fit() function is designed to fit the Variance Gamma (VG) distribution to a given data vector using the fit.VGuv function from the ghyp package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+vg_fit(vec)
+
+```
+
+
+### Arguments
+
+vec: A numeric vector containing the data to be fitted.
+
+### Details
+
+The vg_fit() function estimates the four parameters of the VG distribution using the maximum likelihood method implemented in the fit.VGuv function from the ghyp package. The AIC and BIC values are also calculated and returned.
+
+### Return Value
+
+The vg_fit() function returns a list containing the following elements:
+
+par: A numeric vector of length 4 containing the estimated values for the parameters of the fitted distribution: lambda (location), mu (scale), sigma (shape), and gamma (skewness).
+
+aic: The Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: The Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+vg_fit(returns)
+
+```
+
+## sym.vg_fit() Function 
+
+### Description
+
+The sym.vg_fit() function is designed to fit the Symmetric Variance Gamma (sVG) distribution to a given data vector using the fit.VGuv function from the ghyp package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+sym.vg_fit(vec)
+
+```
+
+### Arguments
+
+vec: A numeric vector containing the data to be fitted.
+
+### Details
+
+The sym.vg_fit() function estimates the four parameters of the sVG distribution using the maximum likelihood method implemented in the fit.VGuv function from the ghyp package. The AIC and BIC values are also calculated and returned.
+
+### Return Value
+
+The sym.vg_fit() function returns a list containing the following elements:
+
+par: A numeric vector of length 4 containing the estimated values for the parameters of the fitted distribution: lambda (scale), mu (location), sigma (volatility), and gamma (skewness).
+
+aic: The Akaike information criterion (AIC) value for the fitted distribution.
+
+bic: The Bayesian information criterion (BIC) value for the fitted distribution.
+
+### Examples
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+sym.vg_fit(returns)
+
+```
+
+## nig_fit() Function
+
+### Description
+
+This function fits the Normal Inverse Gaussian (NIG) Distribution to a given data vector using the nig_fit function from the fBasics package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+nig_fit(vec)
+```
+
+### Arguments
+
+vec: A numeric vector of data.
+
+### Details
+
+The nig_fit function uses the nigFit function from the fBasics package to fit the NIG distribution to the input data. The function suppresses warnings and sets trace and doplot to FALSE. It calculates the AIC and BIC values using the deviance, number of parameters, and sample size.
+
+### Return Value
+
+A list with the following elements:
+
+params: The estimated parameters of the NIG distribution: location, scale, skewness, and shape.
+
+aic: The Akaike Information Criterion (AIC) for the NIG distribution fit.
+
+bic: The Bayesian Information Criterion (BIC) for the NIG distribution fit.
+
+### Example
+
+```{r}
+
+# Create some sample data
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+
+# Fit the NIG distribution to the data
+nig_fit(returns)
+
+```
+
+## ged_fit() Function
+
+### Description
+
+This function fits the Generalized Error Distribution (GED) to a given data vector using the ged_fit function from the fGarch package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+ged_fit(vec)
+
+```
+
+### Arguments
+
+vec: A numeric vector of data.
+
+### Details
+
+The ged_fit function uses the gedFit function from the fGarch package to fit the GED distribution to the input data. The function suppresses warnings and calculates the AIC and BIC values using the deviance, number of parameters, and sample size.
+
+### Return Value
+
+A list with the following elements:
+
+params: A numeric vector of length 3 containing the fitted GED parameters: shape, scale, and location.
+
+aic: The Akaike Information Criterion (AIC) for the fitted model.
+
+bic: The Bayesian Information Criterion (BIC) for the fitted mod
+
+### Examples
+
+```{r}
+# Create some sample data
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+
+# Fit the GED distribution to the data
+ged_fit(returns)
+```
+
+## skew.t_fit() Function
+
+### Description
+
+This function skew.t_fit fits the Skewed Student-t Distribution to a given data vector using the sstdFit function from the fGarch package. It returns the estimated parameters along with the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) values for the fitted distribution.
+
+### Usage
+
+```{r}
+skew.t_fit(vec)
+```
+
+### Arguments
+
+vec: A numeric vector of data.
+
+### Details
+
+The Skewed Student-t Distribution is a probability distribution used in finance and statistics to model stock returns or other financial data. It is similar to the Student-t Distribution but has an additional parameter that introduces skewness into the distribution.
+
+### Return Value
+
+A list with the following elements:
+
+params: A numeric vector of length 4 containing the fitted Skewed Student-t parameters: degrees of freedom, skewness, scale, and location.
+
+aic: The Akaike Information Criterion (AIC) for the fitted model.
+
+bic: The Bayesian Information Criterion (BIC) for the fitted model.
+
+### Example
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+skew.t_fit(returns)
+
+```
+
+
+## skew.normal_fit() Function
+
+### Description
+
+This function skew.normal_fit fits the Skew Normal distribution to a given data vector using the snormFit function from the fGarch package. It returns the estimated parameters along with the AIC and BIC values for the fitted distribution.
+
+### Usage
+
+```{r}
+skew.normal_fit(vec)
+```
+
+### Arguments
+
+vec: A numeric vector containing the data to be fitted.
+
+### Details
+
+The Skew Normal distribution is a probability distribution used in finance and statistics to model stock returns or other financial data. It is similar to the Normal Distribution but has an additional parameter that introduces skewness into the distribution
+
+### Return Value
+
+A list containing the following elements:
+
+params: A numeric vector of length 3 containing the estimated values for the parameters of the fitted distribution: location (mu), scale (sigma), and skewness (alpha).
+
+aic: The Akaike Information Criterion (AIC) value for the fitted distribution.
+
+bic: The Bayesian Information Criterion (BIC) value for the fitted distribution.
+
+### Example
+
+```{r}
+stock_prices <- c(10, 11, 12, 13, 14)
+returns <- diff(log(stock_prices))
+skew.normal_fit(returns)
+
+```
+
+## skew.ged_fit() Funtion
+
+### Description
+
+The Skewed Generalized Error Distribution (SGED) is a probability distribution that can be used to model financial returns or stock prices. The SGED is a flexible distribution that can capture a wide range of skewness and kurtosis in the data.
+
+The skew.ged_fit function in R fits the SGED to a given vector of data using the sgedFit function from the fGarch package. It returns the estimated parameters of the distribution along with the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC).
+
+### Usage
+
+The skew.ged_fit function takes a numeric vector vec as input and returns a list containing the estimated parameters of the SGED distribution, the AIC, and the BIC.
+
+```{r}
+skew.ged_fit(vec)
+
+```
+
+### Arguments
+
+vec: A numeric vector of data to fit the SGED distribution.
+
+### Details
+
+The skew.ged_fit function fits the SGED to the input data using the sgedFit function from the fGarch package. The sgedFit function estimates the parameters of the SGED distribution using maximum likelihood estimation.
+
+The AIC and BIC are criteria used to compare different statistical models. They are measures of the goodness of fit of the model that take into account the number of parameters in the model. The lower the AIC and BIC values, the better the fit of the model.
+
+### Return Value
+
+The skew.ged_fit function returns a list with the following elements:
+
+params: A numeric vector of length 4 containing the estimated parameters of the SGED distribution. The first element is the shape parameter, the second is the scale parameter, the third is the location parameter, and the fourth is the skewness parameter.
+aic: The Akaike Information Criterion (AIC) for the fitted SGED model.
+bic: The Bayesian Information Criterion (BIC) for the fitted SGED model.
+
+### Examples
+
+```{r}
+returns <- rnorm(100)
+
+# Fit the SGED to the returns
+fit <- skew.ged_fit(returns)
+```
+
+
+## fit_multiple_dist() Function
+
+### Description
+
+This function, named fit_multiple_dist, fits multiple probability distributions to a dataframe containing financial data and calculates the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) for each distribution. The function returns a data frame of the AIC values for each asset where the column names are the names of the fitted distributions.
+
+The available distributions include the Normal, Student's t-distribution, Cauchy distribution, Generalized hyperbolic distribution, Hyperbolic distribution, Symmetric generalized hyperbolic distribution, Symmetric hyperbolic distribution, Variance-gamma distribution, Symmetric variance-gamma distribution, Normal-inverse Gaussian distribution, Generalized error distribution, Skew Student's t-distribution, Skew normal distribution, and Skew generalized error distribution. 
+
+Note that the distribution to be fitted from the list of available distributions must include the _fit suffix, as follow
+
+- norm_fit - Normal distribution
+
+- t_fit - Student's t-distribution
+
+- cauchy_fit - Cauchy distribution
+
+- ghd_fit - Generalized hyperbolic distribution
+
+- hd_fit - Hyperbolic distribution
+
+- sym.ghd_fit - Symmetric generalized hyperbolic distribution
+
+- sym.hd_fit - Symmetric hyperbolic distribution
+
+- vg_fit - Variance-gamma distribution
+
+- sym.vg_fit - Symmetric variance-gamma distribution
+
+- nig_fit - Normal-inverse Gaussian distribution
+
+- ged_fit - Generalized error distribution
+
+- skew.t_fit - Skew Student's t-distribution
+
+- skew.normal_fit - Skew normal distribution
+
+- skew.ged_fit - Skew generalized error distribution
+
+Additionally, the function can also fit one distribution to one asset.
+
+### Usage
+
+```{r}
+fit_multiple_dist(dist_names, dataframe)
+```
+
+*It is recommended that the dataframe to be passed as an argument should be from the asset_loader() Function*
+
+### Arguments
+
+dist_names: a character vector of distribution names to be fitted.
+
+dataframe: a dataframe containing the data to be fitted.
+
+### Details
+
+The function loops over the distribution names provided and fits the corresponding distribution to each column of the input dataframe using the fitdistrplus and ghyp packages. The AIC and BIC values are then calculated for each distribution using the fitted distribution parameters. Finally, the function returns a data frame of the AIC values for each asset where the column names are the names of the fitted distributions.
+
+### Return Value
+
+The function returns a dataframe of distributions and their corresponding AIC and BIC values and row names as the asset(s)
+
+```{r}
+data = asset_loader("path/to/data/folder", c("asset1", "asset2"), "Close")
+fit_multiple_dist(c("norm_fit", "cauchy_fit"), data)
+
+```
+
+## best_dist() Function
+
+### Description
+
+The best_dist function is designed to find the best distribution for each row of AIC (Akaike Information Criterion) values in a data frame of fitted distribution models. It takes as input a data frame containing the AIC values for different distributions and a vector of distribution names corresponding to the AIC values. The function returns a data frame with the best distribution for each row based on the minimum AIC value.
+
+The AIC is a measure of the goodness-of-fit of a model that takes into account the number of parameters in the model. The lower the AIC value, the better the fit of the model to the data.
+
+### Usage
+
+The best_dist function takes two arguments:
+
+aic_df: A data frame containing AIC values for different distributions.
+dist_names: A vector of distribution names corresponding to the AIC values.
+The aic_df argument should be a data frame with the AIC values for each distribution model, where each row represents a single observation and each column represents a different distribution. The dist_names argument should be a character vector with the names of the distributions in the same order as the columns of aic_df.
+
+The function returns a data frame with the same number of rows as aic_df and an additional column called best_aic, which contains the name of the distribution with the minimum AIC value for each row.
+
+*Note, the aic_df dataframe preferably should be obtained from the fit_multiple_dist() function. This function assumes that the input data frame aic_df is obtained from the fit_multiple_dist function. Therefore, the column names of the aic_df argument should match the distribution names passed to fit_multiple_dist.*
+
+### Example
+
+```{r}
+df <- asset_loader("path/to/data/folder", ("asset1, asset2"), "Close")
+df <- weekly_return(df) |>
+  na.omit()
+aic_df <- fit_multiple_dist(df, c("norm_fit", "cauchy_fit"))
+best_dist(aic_df, c("Norm", "Cauchy"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

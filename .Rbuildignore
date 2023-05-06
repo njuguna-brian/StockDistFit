@@ -1,3 +1,11 @@
 ^StockDistFit\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^data-raw$
+^doc$
+^Meta$
+^README\.Rmd$
+^\.travis\.yml$
+^\.github$
+^CRAN-SUBMISSION$
+^cran-comments\.md$

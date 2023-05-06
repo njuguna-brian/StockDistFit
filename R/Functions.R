@@ -9,6 +9,9 @@
 #' @param data_path The path to the directory containing the .csv files.
 #' @param assets A vector of asset names to be loaded.
 #' @param price_col The name of the price column to be selected (e.g. Open, Close, Low, High).
+#' @note
+#' The `Date` column in the files should be of the format "%m/%d/%y", that is 01/14/13 with
+#' 01 implying the month, 14 the date and 13 the year
 #'
 #' @return An xts object with asset data.
 #' @export
@@ -33,7 +36,7 @@ asset_loader <- function(data_path, assets, price_col) {
   l <- file.path(data_path, paste0(assets, ".csv"))
   
   for (i in 1:length(l))
-  {
+  {0
     temp <- utils::read.csv(l[i])
     Date <- temp$Date
     temp <- dplyr::select(temp, Date, price_col)
@@ -244,6 +247,7 @@ data.cumret <- function(df_ret, initial_eq) {
 #'
 #' @export
 norm_fit <- function(vec) {
+  suppressWarnings({
   vec <- as.vector(vec)
   temp_norm <- fitdistrplus::fitdist(vec, distr = 'norm')
   
@@ -252,6 +256,7 @@ norm_fit <- function(vec) {
          aic = temp_norm$aic,
          bic = temp_norm$bic
     ))
+  })
 }
 
 
@@ -341,6 +346,7 @@ t_fit <- function(vec) {
 #'
 #' @export
 cauchy_fit <- function(vec) {
+  suppressWarnings({
   vec <- as.vector(vec)
   temp_cauchy <- fitdistrplus::fitdist(vec, distr = 'cauchy')
   return(
@@ -348,6 +354,7 @@ cauchy_fit <- function(vec) {
          aic = temp_cauchy$aic,
          bic = temp_cauchy$bic
     ))
+  })
 }
 
 
@@ -891,7 +898,7 @@ skew.ged_fit <- function(vec) {
 #' @return A list of distributions and their corresponding AIC and BIC values.
 #' @examples
 #' \dontrun{
-#' data = asset_loader("path/to/data", c("asset1", "asset2"), "Close")
+#' data = asset_loader("path/to/data/folder", c("asset1", "asset2"), "Close")
 #' fit_multiple_dist(c("norm_fit", "cauchy_fit"), data)
 #' }
 #' 
@@ -1207,4 +1214,3 @@ best_dist <- function(aic_df, dist_names){
     dplyr::mutate(best_aic = dist_names[best_aic])
   return(aic_df)
 }
-
