@@ -18,23 +18,38 @@ A list of distributions and their corresponding AIC and BIC values.
 This function fits multiple probability distributions to a dataframe and calculates the
 Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) for each distribution and
 then returns a data frame of the AIC values for each asset where the column names are the names of the fitted
+distributions.
 }
 \details{
-distributions. Note that the available distributions are
+Note that the available distributions are
 norm_fit - Normal distribution
+
 t_fit - Student's t-distribution
+
 cauchy_fit - Cauchy distribution
+
 ghd_fit - Generalized hyperbolic distribution
+
 hd_fit - Hyperbolic distribution
+
 sym.ghd_fit - Symmetric generalized hyperbolic distribution
+
 sym.hd_fit - Symmetric hyperbolic distribution
+
 vg_fit - Variance-gamma distribution
+
 sym.vg_fit - Symmetric variance-gamma distribution
+
 nig_fit - Normal-inverse Gaussian distribution
+
 ged_fit - Generalized error distribution
+
 skew.t_fit - Skew Student's t-distribution
+
 skew.normal_fit - Skew normal distribution
+
 skew.ged_fit - Skew generalized error distribution
+
 Also note that the distribution to be fitted from the above list must include the '_fit'.
 The function can also fit one distribution to one asset.
 }

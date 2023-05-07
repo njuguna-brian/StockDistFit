@@ -21,6 +21,7 @@ The input data must be an xts object with dates as rownames.
 \examples{
 \dontrun{
 # Compute monthly returns of an asset vector
+require(xts)
 asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
                          order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
                                              "2023-05-04", "2023-05-05", "2023-05-06",

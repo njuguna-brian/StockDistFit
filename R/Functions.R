@@ -72,6 +72,7 @@ asset_loader <- function(data_path, assets, price_col) {
 #' @examples
 #' \dontrun{
 #' # Compute weekly returns of an asset vector
+#' require(xts)
 #' asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
 #'                          order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
 #'                                              "2023-05-04", "2023-05-05", "2023-05-06",
@@ -108,6 +109,7 @@ weekly_return <- function(vec){
 #' @examples
 #' \dontrun{
 #' # Compute monthly returns of an asset vector
+#' require(xts)
 #' asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
 #'                          order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
 #'                                              "2023-05-04", "2023-05-05", "2023-05-06",
@@ -142,6 +144,7 @@ monthly_return <- function(vec) {
 #' @examples
 #' \dontrun{
 #' # Compute annual returns of an asset vector
+#' require(xts)
 #' asset_returns_xts <- xts(c(0.05, -0.03, 0.02, -0.01, 0.04, -0.02, 0.01),
 #' order.by = as.Date(c("2023-05-01", "2023-05-02", "2023-05-03",
 #' "2023-05-04", "2023-05-05", "2023-05-06",
@@ -289,7 +292,7 @@ norm_fit <- function(vec) {
 #' }
 #' 
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
@@ -339,7 +342,7 @@ t_fit <- function(vec) {
 #' }
 #'
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
@@ -385,7 +388,7 @@ cauchy_fit <- function(vec) {
 #' }
 #' 
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
@@ -436,7 +439,7 @@ ghd_fit <- function(vec) {
 #' }
 #'
 #' @seealso
-#' \code{\link{hd_fit}}, \code{\link{sym.ghd_fit}}, \code{\link{ghd_fit}}, \code{\link{cauchy_fit}},
+#' \code{\link{norm_fit}}, \code{\link{sym.ghd_fit}}, \code{\link{ghd_fit}}, \code{\link{cauchy_fit}},
 #' \code{\link{t_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
@@ -488,8 +491,8 @@ hd_fit <- function(vec) {
 #' }
 #' 
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
-#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
 #' 
@@ -538,7 +541,7 @@ sym.ghd_fit <- function(vec) {
 #' }
 #' 
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}}, \code{\link{nig_fit}},
 #' \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 #' 
@@ -586,8 +589,8 @@ sym.hd_fit <- function(vec) {
 #' }
 #'
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
-#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{sym.vg_fit}},
 #' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
 #' \code{\link{skew.ged_fit}}
 #'
@@ -638,7 +641,7 @@ vg_fit <- function(vec) {
 #' }
 #' 
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{nig_fit}}, 
 #' \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 #' 
@@ -683,6 +686,10 @@ sym.vg_fit <- function(vec) {
 #' returns <- diff(log(stock_prices))
 #' nig_fit(returns)
 #' 
+#' @seealso
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}} 
+#' \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 #' @importFrom fBasics nigFit
 #' 
 #' @export
@@ -722,6 +729,11 @@ nig_fit <- function(vec) {
 #' stock_prices <- c(10, 11, 12, 13, 14)
 #' returns <- diff(log(stock_prices))
 #' ged_fit(returns)
+#' 
+#' @seealso
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{nig_fit}}, 
+#' \code{\link{sym.vg_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 #'
 #' @export
 ged_fit <- function(vec) {
@@ -760,6 +772,11 @@ ged_fit <- function(vec) {
 #' stock_prices <- c(10, 11, 12, 13, 14)
 #' returns <- diff(log(stock_prices))
 #' skew.t_fit(returns)
+#' 
+#' @seealso
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{nig_fit}}, 
+#' \code{\link{sym.vg_fit}}, \code{\link{ged_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 #'
 #' @export
 skew.t_fit <- function(vec) {
@@ -804,9 +821,9 @@ skew.t_fit <- function(vec) {
 #' }
 #'
 #' @seealso
-#' \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 #' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
-#' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}},
+#' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}},
 #' \code{\link{skew.ged_fit}}
 #'
 #' @export
@@ -849,6 +866,12 @@ skew.normal_fit <- function(vec) {
 #' returns <- diff(log(stock_prices))
 #' skew.ged_fit(returns)
 #' }
+#'
+#' @seealso
+#' \code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+#' \code{\link{sym.ghd_fit}}, \code{\link{sym.hd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}},
+#' \code{\link{nig_fit}}, \code{\link{ged_fit}}, \code{\link{skew.t_fit}},
+#' \code{\link{skew.normal_fit}}
 #' 
 #' @export
 skew.ged_fit <- function(vec) {
@@ -874,22 +897,37 @@ skew.ged_fit <- function(vec) {
 #' This function fits multiple probability distributions to a dataframe and calculates the 
 #' Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) for each distribution and
 #' then returns a data frame of the AIC values for each asset where the column names are the names of the fitted
+#' distributions.
 #' @details
-#' distributions. Note that the available distributions are
+#' Note that the available distributions are
 #' norm_fit - Normal distribution
+#' 
 #' t_fit - Student's t-distribution
+#' 
 #' cauchy_fit - Cauchy distribution
+#' 
 #' ghd_fit - Generalized hyperbolic distribution
+#' 
 #' hd_fit - Hyperbolic distribution
+#' 
 #' sym.ghd_fit - Symmetric generalized hyperbolic distribution
+#' 
 #' sym.hd_fit - Symmetric hyperbolic distribution
+#' 
 #' vg_fit - Variance-gamma distribution
+#' 
 #' sym.vg_fit - Symmetric variance-gamma distribution
+#' 
 #' nig_fit - Normal-inverse Gaussian distribution
+#' 
 #' ged_fit - Generalized error distribution
+#' 
 #' skew.t_fit - Skew Student's t-distribution
+#' 
 #' skew.normal_fit - Skew normal distribution
+#' 
 #' skew.ged_fit - Skew generalized error distribution
+#' 
 #' Also note that the distribution to be fitted from the above list must include the '_fit'.
 #' The function can also fit one distribution to one asset.
 #' 
@@ -1191,9 +1229,11 @@ fit_multiple_dist <- function(dist_names, dataframe) {
 #' 
 #'@note
 #'This function takes the data frame obtained from `fit_multiple_dist` function
+#'
 #' @param aic_df A data frame containing AIC values for different distributions
 #' @param dist_names A vector of distribution names corresponding to the AIC values
 #' @return A data frame with the best distribution for each row based on the minimum AIC value
+#' 
 #' @examples
 #' \dontrun{
 #' data = asset_loader("path/to/data", c("asset1", "asset2"), "Close")

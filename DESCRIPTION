@@ -1,12 +1,12 @@
 Package: StockDistFit
 Title: A Package for Fitting Stock Price Distributions
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c(
     person("Brian", "Njuguna", , "briannjuguna133@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0002-2119-904X")),
     person("Stanely", family = "Sayianka", , "stanleysayankasss@gmail.com", role = "ctb")
     )
-Description: The StockDistFit package provides functions for fitting probability distributions to stock price data. The package uses maximum likelihood estimation to find the best-fitting distribution for a given stock. It also offers a function to fit several distributions to one or more assets and compare the distribution with the Akaike Information Criterion and then pick the best distribution.
+Description: The `StockDistFit` package provides functions for fitting probability distributions to stock price data. The package uses maximum likelihood estimation to find the best-fitting distribution for a given stock. It also offers a function to fit several distributions to one or more assets and compare the distribution with the Akaike Information Criterion (AIC) and then pick the best distribution.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

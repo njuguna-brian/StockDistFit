@@ -32,7 +32,7 @@ sym.hd_fit(returns)
 
 }
 \seealso{
-\code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
+\code{\link{norm_fit}}, \code{\link{t_fit}}, \code{\link{cauchy_fit}}, \code{\link{ghd_fit}}, \code{\link{hd_fit}},
 \code{\link{sym.ghd_fit}}, \code{\link{vg_fit}}, \code{\link{sym.vg_fit}}, \code{\link{nig_fit}},
 \code{\link{ged_fit}}, \code{\link{skew.t_fit}}, \code{\link{skew.normal_fit}}, \code{\link{skew.ged_fit}}
 }
